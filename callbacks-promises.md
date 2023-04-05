@@ -2,6 +2,46 @@
 
 Ref: https://www.knowledgehut.com/blog/web-development/nodejs-call-backs
 
+A callback is a function which is passed as argument to another function
+
+Consider the example below:
+
+```js
+function getSum(a,b,logResult) {
+  logResult('something')
+  console.log('Checkpoint 3')
+  logResult(a+b)
+  console.log('Checkpoint 4')
+  logResult(a*b)
+}
+console.log('Checkpoint 1')
+getSum(2,3,function(response){
+  console.log('Result: '+response)
+})
+console.log('Checkpoint 2')
+```
+
+- The first code executed is `console.log('Checkpoint 1')` which corresponds to **output line 1**
+- The code then calls the `getSum` function, so the execution flow now goes into the `getSum` function
+  - Line 1 in `getSum` calls the function which was passed from the caller (hence, "callback"), with `something` as the argument; this corresponds to **output line 2**
+  - Line 2 in `getSum` logs `Checkpoint 3`, which corresponds to **output line 3**
+  - Line 3 in `getSum` calls the function which was passed from the caller, this time with `a+b` as the argument; this corresponds to **output line 4**
+  - Line 4 in `getSum` logs `Checkpoint 4`, which corresponds to **output line 5**
+  - Line 5 in `getSum` calls the function which was passed from the caller, this time with `a*b` as the argument; this corresponds to **output line 6**
+- The execution flow now redirects back to the main block and executes `console.log('Checkpoint 2')`, which corresponds to **output line 7**
+
+Output:
+
+```console
+Checkpoint 1
+Result: something
+Checkpoint 3
+Result: 5
+Checkpoint 4
+Result: 6
+Checkpoint 2
+```
+
 ### 1.1. Basic example
 
 #### 1.1.1. Synchronous
@@ -9,13 +49,13 @@ Ref: https://www.knowledgehut.com/blog/web-development/nodejs-call-backs
 Code:
 
 ```js
-function getSum(a,b,cb) {
-  cb(a+b)
+function getSum(a,b,callback) {
+  callback(a+b)
 }
 console.log('Checkpoint 1')
 getSum(2,3,function(response){
   console.log('Result: '+response)
-});
+})
 console.log('Checkpoint 2')
 ```
 
@@ -32,9 +72,9 @@ Checkpoint 2
 Code:
 
 ```js
-function getSumAsync(a,b,cb){
+function getSumAsync(a,b,callback){
   setTimeout(function(){
-    cb(a+b)
+    callback(a+b)
   },100)
 }
 console.log('Checkpoint 1')
@@ -198,17 +238,17 @@ Code:
 
 ```js
 const fs = require('fs')
-const getAgentsData = new Promise((resolve,reject) => {
-  dataRead = fs.readFileSync('agentsList.txt','utf-8')
-  resolve(dataRead.trim())
+const getRegion = new Promise((resolve,reject) => {
+  dataRead = fs.readFileSync('asia.json','utf-8')
+  resolve(JSON.parse(dataRead)['three'])
 })
-function getDeadlyData(file,element) {
+function getCountry(file,element) {
   return new Promise((resolve,reject) => {
     dataRead = fs.readFileSync(file)
     resolve(JSON.parse(dataRead)[element])
   })
 }
-function getMostDeadlyAgentData(file,element) {
+function getCode(file,element) {
   return new Promise((resolve,reject) => {
     dataRead = fs.readFileSync(file)
     resolve(JSON.parse(dataRead)[element])
