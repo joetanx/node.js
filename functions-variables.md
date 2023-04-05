@@ -11,17 +11,18 @@ Exploring node.js as a newbie can be confusing when you encounter codes like the
   ```
 
   > Ref: https://www.scaler.com/topics/callback-hell-in-javascript/
+
 - Example: AWS IAM authentication for database access
 
   > ❔: `mysql_clear_password` is assigned to empty `()` and pointed to empty `()` then pointed to function `signer.getAuthToken()`
 
-    - Ref: https://docs.aws.amazon.com/lambda/latest/dg/configuration-database.html
+  - Ref: https://docs.aws.amazon.com/lambda/latest/dg/configuration-database.html
 
     ```js
     authPlugins: { mysql_clear_password: () => () => signer.getAuthToken() }
     ```
 
-     - Ref:: https://stackoverflow.com/questions/58067254/node-mysql2-aws-rds-signer-connection-pooling
+  - Ref: https://stackoverflow.com/questions/58067254/node-mysql2-aws-rds-signer-connection-pooling
 
     ```js
     authPlugins: {
@@ -39,19 +40,13 @@ Exploring node.js as a newbie can be confusing when you encounter codes like the
 
 Functions in node.js can be expressed in several ways
 
-Conside an example to write a function which checks whether a number is odd:
-
-- The modulus check of `return num % 2` will return a non-zero value if the number is odd
-- The examples below will all return the same output: `[ 1, 3, 5, 7 ]`
-
 #### Traditional function expression
 
 ```js
-const arr = [1,2,3,4,5,6,7,8]
-function isOdd (num) {
-  return num % 2
+function getSum(a,b){
+  return a+b
 }
-console.log(arr.filter(isOdd))
+console.log(getSum(2,3))
 ```
 
 #### Arrow function expression
@@ -60,14 +55,13 @@ Refs:
 - https://www.w3schools.com/js/js_arrow_function.asp
 - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions
 
-The arrow function expression simply can be a drop in replace of `function isOdd (num)` to `const isOdd = (num) =>`
+The arrow function expression simply can be a drop in replace of `function getSum(a,b)` to `const getSum = (a,b) =>`
 
 ```js
-const arr = [1,2,3,4,5,6,7,8]
-const isOdd = (num) => {
-  return num % 2
+const getSum = (a,b) => {
+  return a+b
 }
-console.log(arr.filter(isOdd))
+console.log(getSum(2,3))
 ```
 
 The code can be even shorter when:
@@ -77,9 +71,8 @@ The code can be even shorter when:
 This reults in the following one-liner function
 
 ```js
-const arr = [1,2,3,4,5,6,7,8]
-const isOdd = num => num % 2
-console.log(arr.filter(isOdd))
+const getSum = (a,b) => a+b
+console.log(getSum(2,3))
 ```
 
 ## 2. Variables
@@ -92,17 +85,16 @@ Variables in node.js can be declared with `var`, `let` or `const`, depending on 
 
 Variables can also be declared without keywords; they become global variables, irrespective of where they are declared
 
-The odd number check example above will then be:
+The above example will then be:
 
 ```js
-arr = [1,2,3,4,5,6,7,8]
-isOdd = num => num % 2
-console.log(arr.filter(isOdd))
+getSum = (a,b) => a+b
+console.log(getSum(2,3))
 ```
 
 ### 2.2. Scope
 
-Variables declared outside a block can be updated anywhere
+Variables declared as `var` or `let` outside a block can be updated anywhere
 
 Code:
 
