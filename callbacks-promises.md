@@ -313,19 +313,19 @@ getRegion.then(region => {
 })
 ```
 
-or collapsing the code slightly:
-
-```js
-getRegion.then(region => {
-  return region
-}).then(region => {
-  return getCountry(region,'eight').then(country => {
-    return getCode(country,'countryCode').then(code => {
-      console.log(code)
-    })
-  })
-})
-```
+> or collapsing the code slightly:
+> 
+> ```js
+> getRegion.then(region => {
+>   return region
+> }).then(region => {
+>   return getCountry(region,'eight').then(country => {
+>     return getCode(country,'countryCode').then(code => {
+>       console.log(code)
+>     })
+>   })
+> })
+> ```
 
 Output: `SGP`
 
