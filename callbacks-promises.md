@@ -1,8 +1,8 @@
 ## 1. Callbacks
 
-Ref: https://www.knowledgehut.com/blog/web-development/nodejs-call-backs
-
 A callback is a function which is passed as argument to another function
+
+### 1.1. Callbacks concept
 
 Consider the example below:
 
@@ -42,39 +42,41 @@ Result: 6
 Checkpoint 2
 ```
 
-### 1.1. Basic example
+> The functions can also be written in arrow notation
+> 
+> ```js
+> const getSum = (a,b,logResult) => {
+>   logResult('something')
+>   console.log('Checkpoint 3')
+>   logResult(a+b)
+>   console.log('Checkpoint 4')
+>   logResult(a*b)
+> }
+> console.log('Checkpoint 1')
+> getSum(2,3,response => console.log('Result: '+response))
+> console.log('Checkpoint 2')
+> ```
 
-#### 1.1.1. Synchronous
+### 1.2. Asynchronus callbacks
 
-Code:
+Callbacks allows asynchronous code execution: the execution flow can continue while the callbacks run asynchronously in the background
 
-```js
-function getSum(a,b,callback) {
-  callback(a+b)
-}
-console.log('Checkpoint 1')
-getSum(2,3,function(response){
-  console.log('Result: '+response)
-})
-console.log('Checkpoint 2')
-```
+This is useful to allow functions that requires more time (such as web API call or file read) to run asynchronously in the background without holding up the code execution flow
 
-Output:
+Consider the `getSum` example changing into the `getSumAsync` function below:
 
-```console
-Checkpoint 1
-Result: 5
-Checkpoint 2
-```
-
-#### 1.1.2. Asynchronous
-
-Code:
+- `logResult(a+b)` and `logResult(a*b)` are simulated long running function using `setTimeout` with 200ms and 100ms respectively
 
 ```js
-function getSumAsync(a,b,callback){
+function getSumAsync(a,b,logResult){
+  logResult('something')
+  console.log('Checkpoint 3')
   setTimeout(function(){
-    callback(a+b)
+    logResult(a+b)
+  },200)
+  console.log('Checkpoint 4')
+  setTimeout(function(){
+    logResult(a*b)
   },100)
 }
 console.log('Checkpoint 1')
@@ -85,21 +87,36 @@ getSumAsync(2,3,function(response)
 console.log('Checkpoint 2')
 ```
 
+- The first code executed is `console.log('Checkpoint 1')` which corresponds to **output line 1**
+- The code then calls the `getSumAsync` function, so the execution flow now goes into the `getSum` function
+  - Line 1 in `getSum` calls the function which was passed from the caller (hence, "callback"), with `something` as the argument; this corresponds to **output line 2**
+  - Line 2 in `getSum` logs `Checkpoint 3`, which corresponds to **output line 3**
+  - Line 3 in `getSum` calls the first `setTimeout` function which has a delay of **200ms**
+  - The first `setTimeout` function continues to run in background, and the execution flow continues with line 4 in `getSum` logs `Checkpoint 4`, which corresponds to **output line 4**
+  - Line 5 in `getSum` calls the second `setTimeout` function which has a delay of **100ms**
+- The second `setTimeout` function continues to run in background, and the execution flow now redirects back to the main block and executes `console.log('Checkpoint 2')`, which corresponds to **output line 5**
+- After **100ms**, the **second** `setTimeout` function completes (**before the first** `setTimeout` function) and calls back to the logResult function, which corresponds to **output line 6**
+- Finally, after **200ms**, the **first** `setTimeout` function completes and calls back to the logResult function, which corresponds to **output line 7**
+
 Output:
 
 ```console
 Checkpoint 1
+Result: something
+Checkpoint 3
+Checkpoint 4
 Checkpoint 2
+Result: 6
 Result: 5
 ```
 
-### 1.2. File read example
+### 1.3. File read example
 
 ☝️ Using `readFileSync()` and `readFile()` with `utf-8` option returns the content with UTF-8 character encoding, if `utf-8` is not specified, the output returned withh be of `Buffer` data type
 
 ☝️ The content read has a newline appended, `.trim()` removes the newline appended
 
-#### 1.2.1. Synchronous
+#### 1.3.1. Synchronous
 
 Example file `sync.txt`: `This is synchronous example`
 
@@ -119,7 +136,7 @@ This is synchronous example
 Checkpoint
 ```
 
-#### 1.2.2. Asynchronous
+#### 1.3.2. Asynchronous
 
 Example file `async.txt`: `This is asynchronous example`
 
@@ -141,7 +158,7 @@ Checkpoint
 This is asynchronous example
 ```
 
-### 1.3. Callback hell example
+### 1.4. Callback hell example
 
 Refs:
 - https://www.knowledgehut.com/blog/web-development/nodejs-call-backs
