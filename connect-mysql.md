@@ -40,21 +40,21 @@ connection.connect(function(err){
 })
 ```
 
-If using `mysql_clear_password` authentication plugin, the `connectionConfig` block needs to include the `mysql_clear_password` under `authPlugins`:
-
-```js
-const connectionConfig = {
-  host: 'localhost',
-  user: 'cityapp',
-  password: 'Cyberark1',
-  database: 'world',
-  authPlugins: {
-    mysql_clear_password: () => () => {
-      return Buffer.from(password + '\0')
-    }
-  }
-}
-```
+> If using `mysql_clear_password` authentication plugin, the `connectionConfig` block needs to include the `mysql_clear_password` under `authPlugins`:
+> 
+> ```js
+> const connectionConfig = {
+>   host: 'localhost',
+>   user: 'cityapp',
+>   password: 'Cyberark1',
+>   database: 'world',
+>   authPlugins: {
+>     mysql_clear_password: () => () => {
+>       return Buffer.from(password + '\0')
+>     }
+>   }
+> }
+> ```
 
 Output:
 
