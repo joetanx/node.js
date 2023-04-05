@@ -1,4 +1,4 @@
-## Some notes on using node.js
+## Notes and examples on using node.js
 
 |S/N|Topic|Link|
 |---|---|---|
